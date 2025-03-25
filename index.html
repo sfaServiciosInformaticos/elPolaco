@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>juegosAPK - Descarga de Juegos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --text-color: #333;
+            --text-light: #fff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        header {
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+
+        nav ul li a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--text-light);
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .game-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+
+        .game-card-content {
+            padding: 1.5rem;
+        }
+
+        .game-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        .game-card p {
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+        .game-card .game-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .download-section {
+            margin: 3rem 0;
+        }
+
+        .download-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .download-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .game-selector {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 1.5rem 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .game-selector:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .download-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .download-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .download-btn:not(:disabled):hover {
+            background-color: #2980b9;
+        }
+
+        .download-info {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s;
+        }
+
+        .success {
+            color: #2ecc71;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        footer {
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+            }
+
+            nav ul {
+                margin-top: 1rem;
+            }
+
+            nav ul li {
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>juegosAPK</h1>
+            <nav>
+                <ul>
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#juegos">Juegos</a></li>
+                    <li><a href="#descargas">Descargas</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="inicio" class="hero">
+            <h2>Bienvenido a mi colección de juegos</h2>
+            <p>Descarga juegos sencillos directamente desde aquí</p>
+        </section>
+
+        <section id="juegos">
+            <h2>Mis Juegos</h2>
+            <div class="games-grid" id="games-container">
+                <!-- Las tarjetas de juegos se generarán con JavaScript -->
+            </div>
+        </section>
+
+        <section id="descargas" class="download-section">
+            <h2>Descargas</h2>
+            <div class="download-container">
+                <div class="download-card">
+                    <h3>Selecciona un juego para descargar</h3>
+                    <select id="game-selector" class="game-selector">
+                        <option value="">-- Elige un juego --</option>
+                        <!-- Las opciones se llenarán con JavaScript -->
+                    </select>
+                    <button id="download-btn" class="download-btn" disabled>
+                        <i class="fas fa-download"></i> Descargar APK
+                    </button>
+                    <div id="download-info" class="download-info"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contacto">
+        <div class="container">
+            <p>&copy; 2025 juegosAPK. Todos los derechos reservados.</p>
+            <p>Whatsapp: +543751316169</p>
+        </div>
+    </footer>
+
+    <script>
+        // Configuración base de rutas
+        const basePath = window.location.pathname.includes('juegosAPK') ? '' : 'juegosAPK/';
+        
+        // Datos de los juegos con rutas corregidas
+        const games = [
+            {
+                id: 1,
+                title: "aventura",
+                description: "Un emocionante juego donde se deberá rescatar el motín de oro custodiado por el temible bot.",
+                imageUrl: `${basePath}aventureOne.png`,
+                downloadUrl: `${basePath}aventura.apk`,
+                version: "1.2.0",
+                size: "12.8 MB"
+            },
+            {
+                id: 2,
+                title: "globo",
+                description: "Demuestra tus habilidades y conduce al globo sin chocar con los asteroides.",
+                imageUrl: `${basePath}globo.png`,
+                downloadUrl: `${basePath}globo.apk`,
+                version: "1.0.1",
+                size: "12.8 MB"
+            },
+            {
+                id: 3,
+                title: "MisionBanana",
+                description: "Intenta comer todas las bananas y sumar puntos.",
+                imageUrl: `${basePath}misionBanana.png`,
+                downloadUrl: `${basePath}MisionBanana.apk`,
+                version: "1.0.1",
+                size: "8.5 MB"
+            },
+            {
+                id: 4,
+                title: "Pin-Pong",
+                description: "Tenis de mesa. A ver qué tan hábil eres...",
+                imageUrl: `${basePath}ping-pong.png`,
+                downloadUrl: `${basePath}rebote_pelota.apk`,
+                version: "1.0.1",
+                size: "5.2 MB"
+            }
+        ];
+
+        // Función para renderizar las tarjetas de juegos
+        function renderGameCards() {
+            const gamesContainer = document.getElementById('games-container');
+            gamesContainer.innerHTML = ''; // Limpiar contenedor
+            
+            games.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                gameCard.innerHTML = `
+                    <img src="${game.imageUrl}" alt="${game.title}" 
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=Imagen+no+disponible'">
+                    <div class="game-card-content">
+                        <h3>${game.title}</h3>
+                        <p>${game.description}</p>
+                        <div class="game-meta">
+                            <span>v${game.version}</span>
+                            <span>${game.size}</span>
+                        </div>
+                    </div>
+                `;
+                gamesContainer.appendChild(gameCard);
+            });
+        }
+
+        // Función para llenar el selector de juegos
+        function populateGameSelector() {
+            const gameSelector = document.getElementById('game-selector');
+            gameSelector.innerHTML = '<option value="">-- Elige un juego --</option>';
+            
+            games.forEach(game => {
+                const option = document.createElement('option');
+                option.value = game.id;
+                option.textContent = `${game.title} (v${game.version}, ${game.size})`;
+                gameSelector.appendChild(option);
+            });
+        }
+
+        // Función para descargar archivo
+        function downloadFile(url, filename) {
+            // Crear enlace temporal
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.style.display = 'none';
+            
+            // Agregar al DOM y simular click
+            document.body.appendChild(link);
+            link.click();
+            
+            // Limpiar
+            setTimeout(() => {
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            }, 100);
+        }
+
+        // Función para manejar la descarga
+        function setupDownloadButton() {
+            const downloadBtn = document.getElementById('download-btn');
+            const gameSelector = document.getElementById('game-selector');
+            const downloadInfo = document.getElementById('download-info');
+            
+            gameSelector.addEventListener('change', function() {
+                downloadBtn.disabled = !this.value;
+                downloadInfo.style.display = 'none';
+            });
+            
+            downloadBtn.addEventListener('click', async function() {
+                if (!gameSelector.value) return;
+                
+                const selectedGameId = parseInt(gameSelector.value);
+                const selectedGame = games.find(game => game.id === selectedGameId);
+                
+                if (!selectedGame) return;
+                
+                // Mostrar información de descarga
+                downloadInfo.innerHTML = `
+                    <p>Preparando descarga de <strong>${selectedGame.title}</strong>...</p>
+                    <p>Tamaño: ${selectedGame.size}</p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 0%"></div>
+                    </div>
+                `;
+                downloadInfo.style.display = 'block';
+                
+                // Simular progreso
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 10;
+                    const progressBar = downloadInfo.querySelector('.progress');
+                    if (progressBar) progressBar.style.width = `${progress}%`;
+                    
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        
+                        try {
+                            // Forzar la descarga del APK
+                            const filename = `${selectedGame.title.replace(/\s+/g, '_')}.apk`;
+                            downloadFile(selectedGame.downloadUrl, filename);
+                            
+                            downloadInfo.innerHTML += `
+                                <p class="success"><i class="fas fa-check-circle"></i> Descarga completada!</p>
+                            `;
+                        } catch (error) {
+                            downloadInfo.innerHTML += `
+                                <p class="error"><i class="fas fa-exclamation-circle"></i> Error al descargar</p>
+                            `;
+                            console.error('Error al descargar:', error);
+                        }
+                    }
+                }, 50);
+            });
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            renderGameCards();
+            populateGameSelector();
+            setupDownloadButton();
+            
+            // Smooth scrolling
+            document.querySelectorAll('nav a').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
